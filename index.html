@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spend time at Hogwarts and find out what magical creature you are</title>
+    
+</head>
+<body>
+    <h1 id ="questionSpace"></h1>
+
+
+<div id="mychoices">
+
+        
+
+      <input type="radio" name="choice" value="choice1" >
+      <label for="choice1" id = "choice1"></label><br>
+        
+      </div>
+      <input type="radio"  name="choice" value="choice2">
+      <label for="choice2"id = "choice2"></label><br>
+    
+      <input type="radio"  name="choice" value="choice3">
+      <label for="choice3" id = "choice3"></label><br>
+
+   
+      <input type="radio"  name="choice" value="choice4">
+      <label for="choice4" id = "choice4"></label><br>
+
+
+      <button class="next-button" onclick="next()">Next</button>
+  
+ 
+</body>
+</html>
+
+<script>
+
+        //Storing elements from the HTML into variables
+        var question = document.getElementById("question");
+        var questionSpace = document.getElementById("questionSpace");
+        var choice1 = document.getElementById ("choice1") //Variable for choice1
+        var choice2 = document.getElementById ("choice2") //Variable for choice2
+        var choice3 = document.getElementById ("choice3") //Variable for choice3
+        var choice4 = document.getElementById ("choice4") //Variable for choice4
+        var selectedChoice //this is the variable is used to keep track of the score
+        var questionState = 0;
+        var score = 0;
+        
+        
+        //Questions and choices.
+        var questionData = [
+    {
+        question: "1. You are in Diagon Alley, Once you buy your robes and books, you go to Magical Menagerie. Which animal are you taking to Hogwarts?",
+        choices: ["Rat", "Toad", "Owl", "Cat"],
+        
+    },
+    {
+        question: "2.You are on the train to Hogwarts, you have the option to buy some snacks, what do you get?",
+        choices:  ["Fizzing Whizbees", "Nothing, I am not hungry! ", "Bertie Bott's Every Flavour Beans ", "Chocolate Frogs"],
+       
+    },
+   
+    {
+        question: "3. You have arrived at Hogwarts, What house are you in?",
+        choices:  ["Slytherin", "Gryffindor", "Ravenclaw", "Hufflepuff"],
+    
+    },
+   
+    {
+        question: "4. You fit into your house perfectly! What is your first class?",
+        choices:  ["Charms with Professor Flitwick", "Transfiguration with Professor McGonagall", "Herbology with Professor Sprout", "Potions with Professor Snape"],
+
+    },
+
+    {
+        question: "5. Who do you sit with?",
+        choices:  ["Luna Lovegood", "Draco Malfoy", "I focus better alone!", "Hermione Granger"],
+       
+    },
+
+    {
+        question: "6. You finish all your classes, walking into the Great Hall. You see dinner is ready, what are you going to eat?",
+        choices:  ["Salad", "Something savoury", "I’m not very hungry, ill just have a drink!", "No savoury, dessert only!"],
+
+    },
+    {
+        question: "7.Great! The food was amazing! What are you going to do for the evening?",
+        choices:  ["Break Curfew with your new friends", "Have a late-night party in your dorm", "Visit the Library and finish your homework", "Go back to my common room to relax"],
+
+    },
+    {
+        question: "8. You had a lot of fun on your first day, you wake up…",
+        choices: ["Tired, I want to sleep longer! ", "Starving!", "Happy! your pet cuddled up with you!", "Excited, I can’t wait to see what happens today!"],
+
+    },
+    {
+        question: "9. A few months later…You quickly put on your uniform, walking down with your friends, and you decided to go Yule ball shopping at Hogsmeade! What will you wear?",
+        choices: ["A grey dress suite ", "A purple ball gown", "Black suite with a bow tie ", "A long green ball gown"],
+       
+    },
+    {
+        question: "10. Once you get your outfit, You decided to get some drinks from The Three Broomsticks, what do you order?",
+        choices: ["Firewhiskey", "Pumpkin juice", "Gillywater! I need to clear my mind!", "Butterbeer!"],
+     
+    },
+    {
+        question: "11. Once your drink arrives, you decide to…",
+        choices: ["Head back to Hogwarts.", "Stay at Three Broomsticks for a while, enjoying talking to friends.", "Go to Zonko's Joke Shop and buy something for future pranks.", "Go to Honeydukes to get sweets."],
+      
+    },
+    {
+        question: "12. The Day of the Yule Ball Arrives. You look amazing! Who do you spend the most time with?",
+        choices: ["Draco Malfoy and Vincent Crabbe", "Harry Potter and Ron Weasley", "Cedric Diggory and Neville Longbottom", "Hermione and Luna Lovegood"],
+   
+    },
+    {
+        question: "13. Once the Yule Ball is over, you…",
+        choices: ["Steal some food to take back!", "Go to the Slytherin common room for an after-party", "Head back to the dorms to relax", "Make your way to the Astronomy tower to star gaze"],
+
+    },
+    {
+        question: "14. It is the end of the year, which means O.W.Ls are coming up! What do you decide to do?",
+        choices: ["I can study later! I’m confident I will pass!", "I might go grab some Gillywater, that way I can study better", "I should find someone to study with, it will be more fun!", "Study! I want to be prepared"],
+      
+    },
+    {
+        question: "15. Finally, your O.W.Ls are over! You passed! Time for the holidays! Where do you choose to stay?",
+        choices: ["I’ll stay at Malfoy Manor!", "I’ll stay with the Weasleys!", "Go home! I miss my family!", "I prefer to stay at Hogwarts"],
+       
+    },
+        ];
+
+        questionSpace.innerHTML = questionData[questionState]['question'];
+        choice1.innerHTML = questionData[questionState]['choices'][0]; //this goes to the variable with the choice1 id and then checks inside the questionData array and checkes choices.
+        choice2.innerHTML = questionData[questionState]['choices'][1];
+        choice3.innerHTML = questionData[questionState]['choices'][2];
+        choice4.innerHTML = questionData[questionState]['choices'][3];
+        
+        
+        function update() {
+
+        if (questionState < questionData.length) { //checks the questionData array for any more questions.
+            questionSpace.innerHTML = questionData[questionState]['question']; //if there are more questions, it moves to the next question.
+            choice1.innerHTML = questionData[questionState]['choices'][0]; //changes the choices when the update function is run.
+            choice2.innerHTML = questionData[questionState]['choices'][1];
+            choice3.innerHTML = questionData[questionState]['choices'][2];
+            choice4.innerHTML = questionData[questionState]['choices'][3];
+            
+        }
+        
+            if (questionState < questionData.length) { //checks the questionData array for any more questions.
+            //radio buttons selected using querySelector. The name of all radio buttons is "choice". The functions checks the selected option made by user.
+            var selectedChoice = document.querySelector('input[name="choice"]:checked'); 
+            
+            if (selectedChoice) {
+            //code gets the value of the radio buttons from code below, then adding that amount to the users score.
+            var choiceValue = selectedChoice.value; 
+            
+            //the choiceValue is stated depending on the choice the user makes, if they choose choice 1, they will get 1 added to their score and so on.
+            if (choiceValue === "choice1") {
+                score += 1; //points being added
+            } else if (choiceValue === "choice2") {
+                score += 2;
+            } else if (choiceValue === "choice3") {
+                score += 3;
+            } else if (choiceValue === "choice4") {
+                score += 4;
+            }
+
+            questionState++; //checks the array and changes the
+        
+        } else { 
+            finish () //if there are no more questions, the finish function will be run to count points.
+     }
+    
+    }
+     }
+     
+     //The next function calls the update function when the next button is clicked
+     function next() {
+    var selectedChoice = document.querySelector('input[name="choice"]:checked');
+
+    if (selectedChoice) {
+        update();
+
+        // Reset radio buttons
+        var choices = document.querySelectorAll ('input[name="choice"]'); 
+        //takes all radio buttons with the name "choices" and stores them in one variable; Choice.
+        choices.forEach (function (choice) {
+        //once a choice is clicked and the next button is used, the choices will be reset but the score will be the same this is because the choices will be checked and then set to false, clearing any selections.
+        choice.checked = false; 
+        });
+
+        if (questionState === 15) {
+            finish(); // this function will give results once all 15 questions have been answered.
+        }
+    } else {
+        // if there is no option selected, this will give an error message.
+        alert("select an option please :)");
+    }
+}
+
+
+     function finish() {
+
+    if (score >= 0 && score <= 14) { //if the users score is 0-10, their result will be a dragon (it counts up points and depending on how many you get different result)
+        window.location.href = "Dragon.html";
+    } else if (score >= 0 && score <= 16) {
+      
+        window.location.href = "Phoenix.html";
+    } else if (score >= 16 && score <= 20) {
+
+        window.location.href = "Hippogriff.html";
+    } else if (score >= 21 && score <= 30) {
+        
+        window.location.href = "Niffler.html";
+      
+    } else if (score >= 31 && score <= 50) {
+        window.location.href = "Thestral.html";
+    } else if (score >= 51 && score <= 60) {
+         window.location.href = "Basilisk.html";
+    }
+         }
+        
+</script>
+
+<style>
+   
+   body {
+    text-align: center;
+    color: rgb(208, 129, 72, 255);
+    font-size: 130%;
+}
+
+.next-button {
+    margin: 10px 10px; /* Adjust the top and left margins for the "Next" button */
+    color: black;
+    background-color:rgb(246, 238, 198);
+    margin-top: 30px 
+}
+
+    .choice1 {
+    position: absolute;
+    top: 130px;
+    left: 300px;
+    margin-left: 20px;
+}
+
+
+
+.choice2 {
+    position: absolute;
+    top: 130px;
+    left: 500px;
+    margin-left: 20px;
+    
+}
+.choice3 {
+    position: absolute;
+    top: 130px;
+    right: 400px;
+    margin-right: 20px;
+}
+
+.choice4 {
+    position: absolute;
+    top: 130px;
+    right: 500px;
+    margin-right: 100px;
+}
+
+#mychoices {
+margin-top: 250px;
+}
+
+body {
+background-image:url("magic-unusual-fairytale-palaces_87572-480.jpg");
+background-size: cover;
+}
+</style>
